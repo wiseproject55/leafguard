@@ -2,13 +2,12 @@
 
 <img src="docs/assets/logo.png" alt="LeafGuard logo" width="160" />
 
-# LeafGuard — Wise Project · OUK Capstone
+# LeafGuard  Wise Project · OUK Capstone
 
 AI-Based Crop Disease Detection and Treatment Advisory Web Platform
 
-![CI](https://github.com/wiseproject55/leafguard/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.11-blue)
-![Node](https://img.shields.io/badge/node-20-339933)
+![Java Script](https://img.shields.io/badge/javascript-ES2022-f1e05a)
 ![Languages](https://img.shields.io/badge/languages-Python%20%7C%20JavaScript%20%7C%20HTML%20%7C%20CSS%20%7C%20Dockerfile-informational)
 
 </div>

@@ -129,12 +129,12 @@ Outputs `ml/saved_models/leafguard_efficientnet.pt` and `class_index.json`. Rest
 
 | Member | Role | Description | Links |
 |--------|------|--------------|-------|
-| Alvin Mwakingali | ML / Data | *Insufficient data to verify — bio not provided* | *Insufficient data to verify* |
-| David Ndegwa | Backend | *Insufficient data to verify — bio not provided* | *Insufficient data to verify* |
-| Grace Omukitsa | Frontend | *Insufficient data to verify — bio not provided* | *Insufficient data to verify* |
-| Mollenta Achieng | DevOps / QA | *Insufficient data to verify — bio not provided* | *Insufficient data to verify* |
+| Alvin Mwakingali | ML / Data | *Demo By alivn* | *Demo By alivn* |
+| David Ndegwa | Backend | *Demo By alivn* | *Demo By alivn* |
+| Grace Omukitsa | Frontend | *Demo By alivn* | *Demo By alivn* |
+| Mollenta Achieng | DevOps / QA | *Demo By alivn* | *Demo By alivn* |
 
-Names and roles sourced from `docs/index.html` team section. Photos, bios, and LinkedIn/GitHub/email links not present in any uploaded file — provide them to populate this table.
+Names and roles sourced from `docs/index.html` team section. Photos, bios, and LinkedIn/GitHub/email links not present in any uploaded file this is just a demo
 
 ## Disclaimer
 

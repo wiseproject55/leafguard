@@ -138,3 +138,7 @@ Names and roles sourced from `docs/index.html` team section. Photos, bios, and L
 ## Disclaimer
 
 Treatment advisory text in `app/db/seed.py` is scaffolding and must be reviewed by a qualified agronomist before any real-world use.
+
+## Contact Us
+
+wiseprojectv@gmail.com

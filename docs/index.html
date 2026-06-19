@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeafGuard: AI Crop Disease Detection | OUK Capstone</title>
+<meta name="description" content="AI-based crop disease detection and treatment advisory web platform. OUK Capstone Project, School of Science & Technology." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1B12;          /* dominant deep botanical near-black */
+    --ink-2:#13241A;
+    --surface:#F6F8F3;      /* cool off-white content bg */
+    --paper:#FFFFFF;
+    --leaf:#2FBF71;         /* scan/detection green accent */
+    --leaf-dim:#1F8F52;
+    --amber:#E8A33D;        /* "detected / alert" semantic */
+    --text:#1B2A20;
+    --muted:#5E6F63;
+    --line:#D7E0D6;
+    --line-dark:#27392C;
+    --max:1140px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',sans-serif;
+    color:var(--text);
+    background:var(--surface);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;line-height:1.08;font-weight:600;letter-spacing:-0.01em}
+  .mono{font-family:'Space Mono',monospace}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+  a{color:inherit}
+
+  /* eyebrow / diagnostic readout label */
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:12px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--leaf-dim);
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(14,27,18,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;color:#fff;font-family:'Fraunces',serif;font-weight:600;font-size:18px}
+  .brand .dot{width:11px;height:11px;border:2px solid var(--leaf);border-radius:2px;position:relative}
+  .brand .dot::after{content:"";position:absolute;inset:2px;background:var(--leaf);border-radius:1px}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{color:#C7D4C9;text-decoration:none;font-size:14px;font-weight:500}
+  .nav-links a:hover{color:#fff}
+  .nav-cta{background:var(--leaf);color:var(--ink)!important;padding:8px 16px;border-radius:6px;font-weight:600;font-size:14px}
+  .nav-cta:hover{background:#fff!important}
+  .menu-btn{display:none;background:none;border:0;color:#fff;font-size:24px;cursor:pointer}
+
+  /* ---------- hero ---------- */
+  .hero{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center;padding:84px 0 96px}
+  .hero h1{font-size:clamp(40px,6vw,68px);color:#fff;margin:18px 0 20px}
+  .hero h1 em{font-style:italic;color:var(--leaf)}
+  .hero p.lead{font-size:18px;color:#BCCBBF;max-width:46ch;margin-bottom:32px}
+  .btn-row{display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;transition:transform .12s ease,background .15s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-primary{background:var(--leaf);color:var(--ink)}
+  .btn-primary:hover{background:#fff}
+  .btn-ghost{border:1px solid var(--line-dark);color:#fff}
+  .btn-ghost:hover{border-color:var(--leaf);background:rgba(47,191,113,0.08)}
+
+  /* signature: scan reticle framing a leaf + diagnostic readout */
+  .scan{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+  .reticle{position:absolute;inset:0;animation:fadein .9s ease both .2s}
+  .reticle span{position:absolute;width:34px;height:34px;border:2.5px solid var(--leaf)}
+  .reticle .tl{top:0;left:0;border-right:0;border-bottom:0}
+  .reticle .tr{top:0;right:0;border-left:0;border-bottom:0}
+  .reticle .bl{bottom:0;left:0;border-right:0;border-top:0}
+  .reticle .br{bottom:0;right:0;border-left:0;border-top:0}
+  .leaf-art{width:62%;height:62%;border-radius:50% 8% 50% 8%;
+    background:linear-gradient(150deg,var(--leaf) 0%,var(--leaf-dim) 60%,#125e36 100%);
+    position:relative;transform:rotate(-12deg);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+  .leaf-art::before{content:"";position:absolute;left:50%;top:8%;bottom:8%;width:2px;background:rgba(255,255,255,.4)}
+  .leaf-art .spot{position:absolute;border-radius:50%;background:var(--amber);box-shadow:0 0 0 4px rgba(232,163,61,.25)}
+  .leaf-art .s1{width:16px;height:16px;top:30%;left:34%}
+  .leaf-art .s2{width:10px;height:10px;top:55%;left:58%}
+  .leaf-art .s3{width:7px;height:7px;top:44%;left:50%}
+  .readout{position:absolute;right:-6px;bottom:18%;background:var(--ink-2);border:1px solid var(--line-dark);border-radius:10px;padding:14px 16px;min-width:188px;animation:fadein .9s ease both .55s}
+  .readout .r-lab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;color:#8AA593;text-transform:uppercase}
+  .readout .r-val{font-family:'Fraunces',serif;font-size:20px;color:#fff;margin:2px 0 8px}
+  .readout .r-bar{height:5px;border-radius:3px;background:#23362a;overflow:hidden}
+  .readout .r-bar i{display:block;height:100%;width:97%;background:var(--leaf)}
+  .readout .r-conf{font-family:'Space Mono',monospace;font-size:11px;color:var(--leaf);margin-top:7px}
+
+  /* ---------- generic section ---------- */
+  section{padding:84px 0}
+  .sec-head{max-width:640px;margin-bottom:48px}
+  .sec-head h2{font-size:clamp(28px,4vw,40px);margin:12px 0}
+  .sec-head p{color:var(--muted);font-size:17px}
+
+  /* about stats */
+  .about-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:56px;align-items:start}
+  .stat-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px}
+  .stat-card + .stat-card{margin-top:16px}
+  .stat-card .n{font-family:'Fraunces',serif;font-size:34px;color:var(--ink)}
+  .stat-card .l{color:var(--muted);font-size:14px;margin-top:4px}
+
+  /* features grid */
+  .features{background:var(--paper)}
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .feat{border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--surface);transition:border-color .15s ease,transform .15s ease}
+  .feat:hover{border-color:var(--leaf);transform:translateY(-3px)}
+  .feat .ico{width:40px;height:40px;border-radius:50%;background:rgba(47,191,113,.14);display:flex;align-items:center;justify-content:center;color:var(--leaf-dim);margin-bottom:14px}
+  .feat h3{font-family:'Inter',sans-serif;font-weight:600;font-size:16px;letter-spacing:0;margin-bottom:6px;color:var(--ink)}
+  .feat p{font-size:14px;color:var(--muted)}
+
+  /* pipeline (true sequence -> numbered) */
+  .pipeline{background:var(--ink);color:#fff}
+  .pipeline .sec-head h2{color:#fff}
+  .pipeline .sec-head p{color:#A9BBAE}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .step{border:1px solid var(--line-dark);border-radius:14px;padding:24px;position:relative}
+  .step .num{font-family:'Space Mono',monospace;font-size:13px;color:var(--leaf);letter-spacing:.1em}
+  .step h3{font-family:'Inter',sans-serif;font-weight:600;font-size:17px;letter-spacing:0;color:#fff;margin:14px 0 8px}
+  .step p{font-size:14px;color:#A9BBAE}
+
+  /* tech stack */
+  .chips{display:flex;flex-wrap:wrap;gap:12px}
+  .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:9px 18px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+  .chip b{font-family:'Space Mono',monospace;font-size:11px;color:var(--leaf-dim);font-weight:700}
+
+  /* team */
+  .team{background:var(--paper)}
+  .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .member{text-align:left}
+  .member .av{aspect-ratio:1/1;border-radius:14px;background:linear-gradient(150deg,#DCE8DE,#C2D6C6);display:flex;align-items:flex-end;padding:14px;border:1px solid var(--line)}
+  .member .av .role{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--leaf-dim);background:rgba(255,255,255,.7);padding:4px 8px;border-radius:6px}
+  .member h3{font-family:'Inter',sans-serif;font-weight:600;font-size:16px;letter-spacing:0;margin:12px 0 2px;color:var(--ink)}
+  .member p{font-size:13px;color:var(--muted)}
+
+  /* footer */
+  footer{background:var(--ink);color:#fff;padding:64px 0 40px;border-top:1px solid var(--line-dark)}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;margin-bottom:48px}
+  footer h4{font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#8AA593;margin-bottom:16px;font-weight:600}
+  footer a{color:#C7D4C9;text-decoration:none;display:block;margin-bottom:10px;font-size:15px}
+  footer a:hover{color:var(--leaf)}
+  .foot-brand p{color:#A9BBAE;font-size:15px;max-width:38ch;margin-top:12px}
+  .foot-bottom{border-top:1px solid var(--line-dark);padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:#7E9285;font-size:13px}
+
+  /* focus + motion */
+  a:focus-visible,button:focus-visible,.btn:focus-visible{outline:2px solid var(--leaf);outline-offset:3px}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+
+  /* responsive */
+  @media(max-width:880px){
+    .nav-links{display:none}
+    .menu-btn{display:block}
+    .hero-grid{grid-template-columns:1fr;gap:40px;padding:56px 0 64px}
+    .scan{max-width:360px;margin:0 auto}
+    .about-grid{grid-template-columns:1fr;gap:32px}
+    .feat-grid{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:1fr 1fr}
+    .team-grid{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr;gap:28px}
+  }
+  @media(max-width:520px){
+    .feat-grid,.steps,.team-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand"><span class="dot"></span> LeafGuard</div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#features">Features</a>
+      <a href="#pipeline">How it works</a>
+      <a href="#team">Team</a>
+      <a class="nav-cta" href="#" data-link="demo">Live Demo</a>
+    </nav>
+    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.nav-links').style.display = (document.querySelector('.nav-links').style.display==='flex'?'none':'flex')">≡</button>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" style="padding:0">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">OUK Capstone · School of Science &amp; Technology</span>
+      <h1>Diagnose crop disease from a single <em>leaf photo</em>.</h1>
+      <p class="lead">LeafGuard is an AI web platform that classifies plant diseases from images and returns treatment guidance, built to help smallholder farmers act before yield is lost.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#" data-link="demo">▶ View Live Demo</a>
+        <a class="btn btn-ghost" href="https://github.com/YOUR-USERNAME/leafguard" data-link="repo">◧ GitHub Repository</a>
+      </div>
+    </div>
+    <div class="scan" aria-hidden="true">
+      <div class="reticle"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div>
+      <div class="leaf-art">
+        <div class="spot s1"></div><div class="spot s2"></div><div class="spot s3"></div>
+      </div>
+      <div class="readout">
+        <div class="r-lab">Detected</div>
+        <div class="r-val">Late Blight</div>
+        <div class="r-bar"><i></i></div>
+        <div class="r-conf">CONFIDENCE 97.4%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <span class="eyebrow">The Problem</span>
+      <h2 style="font-size:clamp(28px,4vw,40px);margin:12px 0 18px">Misdiagnosis costs harvests.</h2>
+      <p style="color:var(--muted);font-size:17px;margin-bottom:16px">Smallholder farmers frequently misidentify plant diseases, leading to wrong or delayed treatment and avoidable crop loss. Expert agronomists are not always reachable in time.</p>
+      <p style="color:var(--muted);font-size:17px">LeafGuard puts a trained image-classification model behind a simple web interface: a farmer photographs an affected leaf, and the system returns the likely disease, a confidence score, severity, and an actionable treatment recommendation, with results logged and mapped to surface local outbreaks.</p>
+    </div>
+    <div>
+      <div class="stat-card"><div class="n">10–12</div><div class="l">distinct functionalities, per OUK capstone scope</div></div>
+      <div class="stat-card"><div class="n">CNN</div><div class="l">transfer-learning classifier (EfficientNet / ResNet)</div></div>
+      <div class="stat-card"><div class="n">Web</div><div class="l">deployed, version-controlled, containerised</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section id="features" class="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Capabilities</span>
+      <h2>What the platform does</h2>
+      <p>Twelve functionalities spanning detection, advisory, history and administration.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><div class="ico">◉</div><h3>Image capture &amp; upload</h3><p>Upload a file or capture directly from the browser camera.</p></div>
+      <div class="feat"><div class="ico">⚙</div><h3>Preprocessing pipeline</h3><p>Automatic resize and normalisation before inference.</p></div>
+      <div class="feat"><div class="ico">🌿</div><h3>Disease classification</h3><p>CNN model predicts the disease class from the leaf image.</p></div>
+      <div class="feat"><div class="ico">%</div><h3>Confidence scoring</h3><p>Each prediction returns a calibrated probability.</p></div>
+      <div class="feat"><div class="ico">▤</div><h3>Severity estimation</h3><p>Estimates affected area to gauge how advanced the disease is.</p></div>
+      <div class="feat"><div class="ico">✚</div><h3>Treatment advisory</h3><p>Maps each diagnosis to a recommended remedy and action.</p></div>
+      <div class="feat"><div class="ico">⊞</div><h3>Multi-crop support</h3><p>Handles several crops via class- or model-level selection.</p></div>
+      <div class="feat"><div class="ico">⟳</div><h3>Scan history</h3><p>Each user's past diagnoses stored and retrievable.</p></div>
+      <div class="feat"><div class="ico">⌖</div><h3>Outbreak map</h3><p>Geotagged scans aggregated to reveal local hotspots.</p></div>
+      <div class="feat"><div class="ico">▦</div><h3>Admin dashboard</h3><p>Inspect data, trigger retraining, monitor accuracy.</p></div>
+      <div class="feat"><div class="ico">⤓</div><h3>PDF report export</h3><p>Download a diagnosis and recommendation summary.</p></div>
+      <div class="feat"><div class="ico">🌐</div><h3>Multilingual UI</h3><p>Interface available in more than one language.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PIPELINE ================= -->
+<section id="pipeline" class="pipeline">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow" style="color:var(--leaf)">Model Pipeline</span>
+      <h2>From photo to recommendation</h2>
+      <p>A four-stage inference flow. Order matters, so each stage feeds the next.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">01</div><h3>Capture</h3><p>User submits a leaf image via upload or live camera.</p></div>
+      <div class="step"><div class="num">02</div><h3>Preprocess</h3><p>Image resized and normalised to the model's input format.</p></div>
+      <div class="step"><div class="num">03</div><h3>Classify</h3><p>Fine-tuned CNN predicts disease class with a confidence score.</p></div>
+      <div class="step"><div class="num">04</div><h3>Advise</h3><p>Result mapped to treatment guidance, logged and mapped.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TECH STACK ================= -->
+<section id="stack">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Built With</span>
+      <h2>Technology stack</h2>
+    </div>
+    <div class="chips">
+      <div class="chip"><b>UI</b> React</div>
+      <div class="chip"><b>API</b> FastAPI (Python)</div>
+      <div class="chip"><b>ML</b> PyTorch / Keras</div>
+      <div class="chip"><b>Model</b> EfficientNet (transfer learning)</div>
+      <div class="chip"><b>DB</b> PostgreSQL</div>
+      <div class="chip"><b>Map</b> Leaflet + OpenStreetMap</div>
+      <div class="chip"><b>Deploy</b> Docker</div>
+      <div class="chip"><b>VCS</b> GitHub</div>
+      <div class="chip"><b>PM</b> Trello</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TEAM ================= -->
+<section id="team" class="team">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">The Group</span>
+      <h2>Wise Project</h2>
+    </div>
+    <div class="team-grid">
+      <div class="member"><div class="av"><span class="role">ML / Data</span></div><h3>Alvin Mwakingali</h3><p>Model training &amp; evaluation</p></div>
+      <div class="member"><div class="av"><span class="role">Backend</span></div><h3>David Ndegwa</h3><p>API, serving &amp; database</p></div>
+      <div class="member"><div class="av"><span class="role">Frontend</span></div><h3>Grace Omukitsa</h3><p>UI, map &amp; reports</p></div>
+      <div class="member"><div class="av"><span class="role">DevOps / QA</span></div><h3>Mollenta Achieng</h3><p>Deployment, integration, testing</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand"><span class="dot"></span> LeafGuard</div>
+        <p>AI-based crop disease detection and treatment advisory web platform. Capstone Project, The Open University of Kenya, School of Science &amp; Technology.</p>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <!-- TODO: paste your real links -->
+        <a href="https://github.com/YOUR-USERNAME/leafguard" data-link="repo">GitHub Repository</a>
+        <a href="#" data-link="demo">Live Deployment</a>
+        <a href="#">Final Report (PDF)</a>
+        <a href="#">Demo Video</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <a href="mailto:wiseprojectv@gmail.com">wiseprojectv@gmail.com</a>
+        <a href="#">Supervisor</a>
+        <a href="#">Industry Mentor</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="yr"></span> LeafGuard, OUK Capstone Project</span>
+      <span class="mono">SCHOOL OF SCIENCE &amp; TECHNOLOGY</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  // Placeholder links: replace href="#" / data-link attributes with your real repo and deployment URLs.
+</script>
+</body>
+</html>

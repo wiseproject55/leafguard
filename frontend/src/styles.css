@@ -1,0 +1,77 @@
+:root {
+  --green: #2c5f2d;
+  --moss: #97bc62;
+  --bg: #f7f9f4;
+  --text: #1c2419;
+  --muted: #6b7280;
+  --danger: #b91c1c;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--green);
+  color: #fff;
+}
+
+.brand { font-weight: 700; font-size: 1.25rem; }
+.nav-links a { color: #fff; margin-left: 1.5rem; text-decoration: none; }
+.nav-links a:hover { text-decoration: underline; }
+
+.container { max-width: 880px; margin: 0 auto; padding: 2rem; }
+
+h1 { color: var(--green); }
+.muted { color: var(--muted); }
+.error { color: var(--danger); }
+
+input, button {
+  font-size: 1rem;
+  padding: 0.55rem 0.75rem;
+  margin: 0.35rem 0.35rem 0.35rem 0;
+  border-radius: 6px;
+  border: 1px solid #cbd5c0;
+}
+
+button {
+  background: var(--green);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+button:disabled { background: #aebfa0; cursor: not-allowed; }
+button.link { background: none; color: var(--green); padding-left: 0; }
+
+.preview { display: block; max-width: 320px; margin: 1rem 0; border-radius: 8px; }
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8df;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin: 1rem 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.advisory { margin-top: 1rem; }
+.treatment { background: var(--bg); border-radius: 6px; padding: 0.75rem; margin: 0.5rem 0; }
+.feedback { display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+
+.table { width: 100%; border-collapse: collapse; }
+.table th, .table td { text-align: left; padding: 0.6rem; border-bottom: 1px solid #e2e8df; }
+
+.tag { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.8rem; }
+.tag.healthy { background: #dcfce7; color: #166534; }
+.tag.diseased { background: #fee2e2; color: #991b1b; }

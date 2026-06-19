@@ -124,7 +124,7 @@ Outputs `ml/saved_models/leafguard_efficientnet.pt` and `class_index.json`. Rest
 
 **Frameworks/Tools:** React · Vite · FastAPI · PyTorch · torchvision · PostgreSQL · SQLAlchemy · Docker · GitHub Actions
 
-## Team members — Wise Project
+## Team members  Wise Project
 
 | Member | Role | Description | Links |
 |--------|------|--------------|-------|

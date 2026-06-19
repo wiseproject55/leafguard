@@ -1,4 +1,4 @@
-# LeafGuard — Capstone Proposal Skeleton
+# LeafGuard Capstone Proposal Skeleton
 
 Contents follow the **exact sequence** mandated on Slide 11 of the OUK guidelines.
 Fill bracketed sections; do not reorder.

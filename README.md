@@ -141,4 +141,4 @@ Treatment advisory text in `app/db/seed.py` is scaffolding and must be reviewed 
 
 ## Contact Us
 
-wiseprojectv@gmail.com
+[![Email](https://img.shields.io/badge/email-wiseprojectv@gmail.com-d14836?logo=gmail&logoColor=white)](mailto:wiseprojectv@gmail.com)

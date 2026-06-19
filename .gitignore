@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+venv/
+node_modules/
+dist/
+uploads/
+ml/data/train/
+ml/data/val/
+ml/saved_models/*.pt
+*.log
